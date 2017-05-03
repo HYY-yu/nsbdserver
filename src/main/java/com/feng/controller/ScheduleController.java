@@ -35,7 +35,7 @@ public class ScheduleController {
 
     @RequestMapping(value = "/overviewAllStationByTime")
     public ResponseBean<SluiceBean> overviewAllStationByTime(@RequestParam("time") String time) {
-        logger.info("访问 -- " + time);
+        logger.info("访问全线节制闸数据 -- " + time);
 
         if (TextUtils.isEmpty(time)) {
             return ResponseBeanFactory.error(ResponseCodeEnum.REQUEST_PARAMETER_ERROR);
@@ -50,11 +50,28 @@ public class ScheduleController {
         return ResponseBeanFactory.success(ResponseCodeEnum.SUCCESS, sluiceBeanList);
     }
 
+    @RequestMapping(value = "/overviewFSKBeanByTime")
+    public ResponseBean<FSKBean> overviewFSKBeanByTime(@RequestParam("time") String time) {
+        logger.info("访问全线分水口数据 -- " + time);
+
+        if (TextUtils.isEmpty(time)) {
+            return ResponseBeanFactory.error(ResponseCodeEnum.REQUEST_PARAMETER_ERROR);
+        }
+
+        List<FSKBean> sluiceBeanList;
+        try {
+            sluiceBeanList = scheduleService.overviewFSKBeanByTime(time);
+        } catch (ParseException e) {
+            return ResponseBeanFactory.error(ResponseCodeEnum.TIME_FORMAT_ERROR);
+        }
+        return ResponseBeanFactory.success(ResponseCodeEnum.SUCCESS, sluiceBeanList);
+    }
+
     @RequestMapping(value = "/queryOneStationByTimeRange")
     public ResponseBean<SluiceBean> queryOneStationByTimeRange(@RequestParam("sluiceID") int sluiceID,
                                                                @RequestParam("timeStartString") String timeStartString,
                                                                @RequestParam("timeEndString") String timeEndString) {
-        logger.info("访问 -- id : " + sluiceID + "timeRange : " + timeStartString + " -- " + timeEndString);
+        logger.info("访问单节制闸 -- id : " + sluiceID + "timeRange : " + timeStartString + " -- " + timeEndString);
         if (TextUtils.isEmpty(timeStartString) || TextUtils.isEmpty(timeEndString)) {
             return ResponseBeanFactory.error(ResponseCodeEnum.REQUEST_PARAMETER_ERROR);
         }

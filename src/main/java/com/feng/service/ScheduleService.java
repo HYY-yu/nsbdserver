@@ -26,17 +26,41 @@ public class ScheduleService {
 
     private final ZDDMRepository zddmRepository;
 
+    private final FSKRepository fskRepository;
+
     @Autowired
-    public ScheduleService(SluiceRepository sluiceRepository, LocalRepositoryImpl procedureRepository, FSRepository fsRepository, ZDDMRepository zddmRepository) {
+    public ScheduleService(SluiceRepository sluiceRepository, LocalRepositoryImpl procedureRepository, FSRepository fsRepository, ZDDMRepository zddmRepository, FSKRepository fskRepository) {
         this.sluiceRepository = sluiceRepository;
         this.procedureRepository = procedureRepository;
         this.fsRepository = fsRepository;
         this.zddmRepository = zddmRepository;
+        this.fskRepository = fskRepository;
     }
 
     public List<SluiceBean> overviewAllStationByTime(String time) throws ParseException {
         Date date = DateUtil.parse(time);
         List<SluiceBean> sluiceBeanList = sluiceRepository.findAllByTimeEquals(date);
+
+        return sluiceBeanList;
+    }
+
+    public List<FSKBean> overviewFSKBeanByTime(String time) throws ParseException {
+        Date date = DateUtil.parse(time);
+        List<FSKBean> sluiceBeanList = fskRepository.findAllByJctimeEquals(date);
+
+        //处理 当有null 用0代替
+        for (FSKBean f :
+                sluiceBeanList) {
+            if(f.getHole1kd() ==null){
+                f.setHole1kd(0f);
+            }
+            if(f.getInstantflow1() ==null){
+                f.setInstantflow1(0f);
+            }
+            if (f.getTotalflow() == null) {
+                f.setTotalflow(0f);
+            }
+        }
 
         return sluiceBeanList;
     }
@@ -122,8 +146,8 @@ public class ScheduleService {
         return hour24SluiceBeanList;
     }
 
-    public List<FS_StatisticsBean> queryFSByTime(String timeS) {
-        List<FS_StatisticsBean> fs_statisticsBeans =  fsRepository.findAllByDridEquals(timeS);
+    public List<FS_StatisticsBean> queryFSByTime(String time) {
+        List<FS_StatisticsBean> fs_statisticsBeans =  fsRepository.findAllByDridEquals(time);
         return fs_statisticsBeans;
     }
 
@@ -131,4 +155,5 @@ public class ScheduleService {
         List<ZDDM_StatisticsBean> zddm_statisticsBeans =  zddmRepository.findAllByDridEquals(time);
         return zddm_statisticsBeans;
     }
+
 }

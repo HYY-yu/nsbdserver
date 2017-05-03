@@ -32,7 +32,7 @@ public class HomeController {
     public ResponseBean<UserBean> login(@RequestParam("loginName") String username,
                                         @RequestParam("password") String password) {
         logger.info("收到请求 " + username);
-        List<UserBean> datas = new ArrayList<>();
+        List<UserBean> datas = new ArrayList<UserBean>();
 
         if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
             return ResponseBeanFactory.error(ResponseCodeEnum.REQUEST_PARAMETER_ERROR);

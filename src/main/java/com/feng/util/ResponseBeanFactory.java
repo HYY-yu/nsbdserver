@@ -10,7 +10,7 @@ import java.util.List;
 public class ResponseBeanFactory {
 
     public static <T> ResponseBean<T> success(ResponseCodeEnum codeEnum,List<T> datas) {
-        ResponseBean tempBean = new ResponseBean<>();
+        ResponseBean tempBean = new ResponseBean<T>();
         tempBean.setCode(codeEnum.getCode());
         tempBean.setMessage(codeEnum.getMessage());
         tempBean.setDatas(datas);
@@ -18,7 +18,7 @@ public class ResponseBeanFactory {
     }
 
     public static <T> ResponseBean<T> error(ResponseCodeEnum codeEnum){
-        ResponseBean<T> tempBean = new ResponseBean<>();
+        ResponseBean<T> tempBean = new ResponseBean<T>();
         tempBean.setCode(codeEnum.getCode());
         tempBean.setMessage(codeEnum.getMessage());
         tempBean.setDatas(null);
